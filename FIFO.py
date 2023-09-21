@@ -264,6 +264,7 @@ if __name__ == "__main__":
 
 ---------------------
 
+
 import queue
 
 class Process:
@@ -616,7 +617,11 @@ if __name__ == "__main__":
 
     runfor = 10  # Set the number of iterations to run for
     fifo_scheduler(processes, runfor)
-'''
+-----------------------------
+-----------------------------
+    START HERE->
+
+
 import queue
 
 class Process:
@@ -694,3 +699,1155 @@ if __name__ == "__main__":
 
     runfor = 10  # Set the number of iterations to run for
     fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time:
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics and print after the simulation finishes
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time:
+                print(f"Time {current_time:4} : {process.name} arrived")
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        # Check for beginning time (after updating current_time)
+        for process in processes:
+            if process.start_time == current_time - 1:
+                print(f"Time {current_time-1:4} : {process.name} selected (burst {process.burst_time:4})")
+
+        iteration += 1
+
+    # Calculate metrics and print after the simulation finishes
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.Queue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO)")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes
+        for process in processes:
+            if process.arrival_time == current_time:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+            current_time += running_process.burst_time
+            running_process.end_time = current_time
+            completed_processes.append(running_process)
+            print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {completed_processes[-1].end_time}\n")
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.Queue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    queued_messages = []  # Queue for user messages
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO)")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes
+        for process in processes:
+            if process.arrival_time == current_time:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        # Check for queued messages
+        while queued_messages:
+            message_time, message = queued_messages[0]
+            if message_time <= current_time:
+                print(f"Time {current_time:4} : {message}")
+                queued_messages.pop(0)
+            else:
+                break
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+            current_time += running_process.burst_time
+            running_process.end_time = current_time
+            completed_processes.append(running_process)
+            print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {completed_processes[-1].end_time}\n")
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+
+    # Define queued messages with timestamps
+    queued_messages = [
+        (2, "User message at time 2"),
+        (4, "User message at time 4"),
+    ]
+
+    for message_time, message in queued_messages:
+        print(f"Queued message at time {message_time}: {message}")
+
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = []
+    iteration = 0  # Counter for the number of iterations
+
+    queued_messages = []  # Queue for user messages
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO)")
+
+    while len(completed_processes) != total_processes and current_time < runfor:
+        # Check for arriving processes
+        for process in processes:
+            if process.arrival_time <= current_time and process not in completed_processes:
+                ready_queue.put(process)
+
+        # Check for queued messages
+        while queued_messages:
+            message_time, message = queued_messages[0]
+            if message_time <= current_time:
+                print(f"Time {current_time:4} : {message}")
+                queued_messages.pop(0)
+            else:
+                break
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+
+            if running_process.burst_time > 1:
+                # Enqueue the process with reduced burst time
+                ready_queue.put(Process(running_process.name, running_process.arrival_time, running_process.burst_time - 1))
+            else:
+                # Process finished
+                current_time += 1
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times.append(waiting_time)
+
+    print(f"Finished at time {current_time}\n")
+
+    for i, process in enumerate(completed_processes):
+        print(f"{process.name} wait {waiting_times[i]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+
+    # Define queued messages with timestamps
+    queued_messages = [
+        (2, "User message at time 2"),
+        (4, "User message at time 4"),
+    ]
+
+    for message_time, message in queued_messages:
+        print(f"Queued message at time {message_time}: {message}")
+
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.Queue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    queued_messages = []  # Queue for user messages
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO)")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes
+        for process in processes:
+            if process.arrival_time == current_time:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        # Check for queued messages
+        while queued_messages:
+            message_time, message = queued_messages[0]
+            if message_time <= current_time:
+                print(f"Time {current_time:4} : {message}")
+                queued_messages.pop(0)
+            else:
+                break
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+            current_time += running_process.burst_time
+            running_process.end_time = current_time
+            completed_processes.append(running_process)
+            print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {completed_processes[-1].end_time}\n")
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+
+    # Define queued messages with timestamps
+    queued_messages = [
+        (2, "User message at time 2"),
+        (4, "User message at time 4"),
+    ]
+
+    for message_time, message in queued_messages:
+        print(f"Queued message at time {message_time}: {message}")
+
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.Queue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO)")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+            current_time += running_process.burst_time
+            running_process.end_time = current_time
+            completed_processes.append(running_process)
+            print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {completed_processes[-1].end_time}\n")
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time and process.start_time is None:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            running_process.start_time = current_time
+            print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+================================                        HERE just need IDLE
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time and process.start_time is None:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 15  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time and process.start_time is None:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+        else:
+            if not selected_processes:
+                print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+    is_idle = True  # Flag to check if the system is idle
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time and process.start_time is None:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+                is_idle = False
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+        elif not is_idle:
+            print(f"Time {current_time:4} : Idle")
+            is_idle = True
+            current_time += 1
+        else:
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+=========================               HERE, just need Idle
+'''
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        # Check for arriving processes before each iteration
+        for process in processes:
+            if process.arrival_time == current_time and process.start_time is None:
+                print(f"Time {current_time:4} : {process.name} arrived")
+                ready_queue.put(process)
+
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            #if len(completed_processes) < total_processes:
+            print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 20  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+'''
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+
+    # Check for arriving processes before entering the while loop
+    for process in processes:
+        if process.arrival_time == current_time and process.start_time is None:
+            print(f"Time {current_time:4} : {process.name} arrived")
+            ready_queue.put(process)
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            if len(completed_processes) < total_processes:
+                print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+
+import queue
+
+class Process:
+    def __init__(self, name, arrival_time, burst_time):
+        self.name = name
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.start_time = None
+        self.end_time = None
+
+    def __lt__(self, other):
+        # Priority comparison based on arrival_time
+        return self.arrival_time < other.arrival_time
+
+def fifo_scheduler(processes, runfor):
+    current_time = 0
+    ready_queue = queue.PriorityQueue()
+    completed_processes = []
+    total_processes = len(processes)
+    response_times = {}
+    turnaround_times = {}
+    waiting_times = {}
+    iteration = 0  # Counter for the number of iterations
+
+    print(f"{total_processes} processes")
+    print("Using First-In, First-Out (FIFO) based on arrival_time")
+
+    selected_processes = set()  # Set to keep track of selected processes
+
+    # Initialize the queue before entering the loop
+    for process in processes:
+        if process.arrival_time == current_time and process.start_time is None:
+            print(f"Time {current_time:4} : {process.name} arrived")
+            ready_queue.put(process)
+
+    while len(completed_processes) != total_processes and iteration < runfor:
+        if not ready_queue.empty():
+            running_process = ready_queue.get()
+            if running_process.name not in selected_processes:
+                running_process.start_time = current_time
+                print(f"Time {current_time:4} : {running_process.name} selected (burst {running_process.burst_time:4})")
+                selected_processes.add(running_process.name)
+            current_time += 1
+            running_process.burst_time -= 1
+
+            if running_process.burst_time == 0:
+                running_process.end_time = current_time
+                completed_processes.append(running_process)
+                selected_processes.remove(running_process.name)  # Remove from selected set
+                print(f"Time {current_time:4} : {running_process.name} finished")
+            else:
+                ready_queue.put(running_process)
+        else:
+            if len(completed_processes) < total_processes:
+                print(f"Time {current_time:4} : Idle")
+            current_time += 1
+
+        iteration += 1
+
+    # Calculate metrics
+    for process in completed_processes:
+        turnaround_time = process.end_time - process.arrival_time
+        response_time = process.start_time - process.arrival_time
+        waiting_time = turnaround_time - process.burst_time
+        response_times[process.name] = response_time
+        turnaround_times[process.name] = turnaround_time
+        waiting_times[process.name] = waiting_time
+
+    print(f"Finished at time {runfor}\n")  # Use runfor in the "Finished at time" line
+
+    for process in completed_processes:
+        print(f"{process.name} wait {waiting_times[process.name]:4} turnaround {turnaround_times[process.name]:4} response {response_times[process.name]:4}")
+
+if __name__ == "__main__":
+    # Define the processes (name, arrival time, burst time)
+    processes = [
+        Process("A", 0, 5),
+        Process("B", 1, 4),
+        Process("C", 4, 2),
+    ]
+
+    runfor = 10  # Set the number of iterations to run for
+    fifo_scheduler(processes, runfor)
+'''
