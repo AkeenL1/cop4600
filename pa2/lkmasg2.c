@@ -138,7 +138,7 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
     error_count = copy_to_user(buffer, message, len);
 
     if (error_count == 0) {
-        printk(KERN_INFO "lkmasg2: Sent %d characters to the user\n", message_size);
+        printk(KERN_INFO "lkmasg2: Success, copied %d characters/\n", message_size);
         int i,k;
         for (i = 0, k = len; k < message_size; k++, i++)
         {
@@ -155,10 +155,10 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
         strcpy(message, temp_message);
         return 0;
     } else {
-        printk(KERN_ERR "lkmasg2: Failed to send %d characters to the user\n", error_count);
+        printk(KERN_ERR "lkmasg2: Failed to send %d characters.\n", error_count);
         return -EFAULT; // Failed -- return a bad address message
     }
-	printk(KERN_INFO "read stub");
+	printk(KERN_INFO "lkmasg2: Successfully read from device, displayed and deleted.");
 	return 0;
 }
 
@@ -170,7 +170,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
 
     if (copy_from_user(message, buffer, len))
     {
-        printk(KERN_ERR "Failed to copy message from user space to kernel space.\n");
+        printk(KERN_ERR "lkmasg2: Error, couldn't copy from user space\n");
         return -EFAULT;
     }
 
@@ -178,7 +178,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
 
     if (len == 1 && buffer[0] == 8)
     {
-        printk(KERN_INFO "lkmasg2: Empty String Alert, Received 0 characters from the user\n");
+        printk(KERN_INFO "lkmasg2: Success, Empty String\n");
         return 0;
     }
 
@@ -188,7 +188,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
         message_size = sizeof(message);
     }
 
-    printk(KERN_INFO "lkmasg2: Received message from user space: %s\n", message);
+    printk(KERN_INFO "lkmasg2: Success, wrote message from userspace: %s\n", message);
 
     return len;
 }
