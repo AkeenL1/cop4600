@@ -16,7 +16,7 @@
 MODULE_LICENSE("GPL");						 ///< The license type -- this affects available functionality
 MODULE_AUTHOR("John Aedo");					 ///< The author -- visible when you use modinfo
 MODULE_DESCRIPTION("lkmasg2 Kernel Module"); ///< The description -- see modinfo
-MODULE_VERSION("0.1");						 ///< A version number to inform users
+MODULE_VERSION("0.2");						 ///< A version number to inform users
 
 /**
  * Important variables that store data and keep track of relevant information.
@@ -26,9 +26,9 @@ static int major_number;
 static struct class *lkmasg2Class = NULL;	///< The device-driver class struct pointer
 static struct device *lkmasg2Device = NULL; ///< The device-driver device struct pointer
 static char message[1025] = {0};
-static char release[sizeof(message)] = {0};
-static short size_of_message = 0;
-static int number_opens = 0;
+static char temp_message[sizeof(message)] = {0};
+static short message_size = 0;
+static int opens = 0;
 static struct class* char_class = NULL;
 static struct device* char_device = NULL;
 /**
@@ -111,7 +111,7 @@ void cleanup_module(void)
  */
 static int open(struct inode *inodep, struct file *filep)
 {
-	number_opens++;
+	opens++;
     printk(KERN_INFO "lkmasg2: device opened.\n");
 	return 0;
 }
@@ -130,24 +130,24 @@ static int close(struct inode *inodep, struct file *filep)
  */
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
-    int k,i;
-    if (len > size_of_message)
+    if (len > message_size)
     {
-        len = size_of_message;
+        len = message_size;
     }
     int error_count = 0;
     error_count = copy_to_user(buffer, message, len);
 
     if (error_count == 0) {
-        printk(KERN_INFO "lkmasg2: Sent %d characters to the user\n", size_of_message);
-        for (k = 0, i = len; i < size_of_message; i++, k++)
+        printk(KERN_INFO "lkmasg2: Sent %d characters to the user\n", message_size);
+        int i,k;
+        for (i = 0, k = len; k < message_size; k++, i++)
         {
 
-            release[k] = message[i];
+            temp_message[i] = message[k];
         }
 
-        size_of_message = size_of_message - len; // update size of buffer, essentially an offset
-        strcpy(message, release);
+        message_size -= len;
+        strcpy(message, temp_message);
         return 0;
     } else {
         printk(KERN_ERR "lkmasg2: Failed to send %d characters to the user\n", error_count);
@@ -169,7 +169,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
         return -EFAULT;
     }
 
-    size_of_message = strlen(message);
+    message_size = strlen(message);
 
     if (len == 1 && buffer[0] == 8)
     {
@@ -180,7 +180,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
     if (len > sizeof(message))
     {
         len = sizeof(message);
-        size_of_message = sizeof(message);
+        message_size = sizeof(message);
     }
 
     printk(KERN_INFO "lkmasg2: Received message from user space: %s\n", message);
