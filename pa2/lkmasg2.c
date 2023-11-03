@@ -146,6 +146,11 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
             temp_message[i] = message[k];
         }
 
+        for (i = message_size - len; i < message_size; i++)
+        {
+            message[i] = 0;
+        }
+
         message_size -= len;
         strcpy(message, temp_message);
         return 0;
