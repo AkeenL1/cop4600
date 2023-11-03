@@ -130,7 +130,7 @@ static int close(struct inode *inodep, struct file *filep)
  */
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
-    int i,k;
+    int k,i;
     if (len > size_of_message)
     {
         len = size_of_message;
@@ -140,10 +140,10 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
 
     if (error_count == 0) {
         printk(KERN_INFO "lkmasg2: Sent %d characters to the user\n", size_of_message);
-        for (j = 0, i = len; i < size_of_message; i++, j++)
+        for (k = 0, i = len; i < size_of_message; i++, k++)
         {
 
-            release[j] = message[i];
+            release[k] = message[i];
         }
 
         size_of_message = size_of_message - len; // update size of buffer, essentially an offset
