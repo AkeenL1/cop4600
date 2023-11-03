@@ -138,7 +138,7 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
     error_count = copy_to_user(buffer, message, len);
 
     if (error_count == 0) {
-        printk(KERN_INFO "lkmasg2: Success, copied %d characters/\n", message_size);
+        printk(KERN_INFO "lkmasg2: Success, copied %d characters\n", message_size);
         int i,k;
         for (i = 0, k = len; k < message_size; k++, i++)
         {
