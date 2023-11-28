@@ -11,6 +11,7 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/mutex.h>
+#include "lkmasg2_shared.c"
 
 #define DEVICE_NAME "lkmasg2_reader"
 #define CLASS_NAME "char"
