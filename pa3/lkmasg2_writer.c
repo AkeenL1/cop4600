@@ -98,7 +98,7 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
         len = sizeof(shared_buffer) - shared_buffer_size;
     }
 
-    if (copy_from_user(shared_buffer + shared_buffer_size, buffer, len)) {
+    if (copy_from_user(shared_buffer, buffer, len)) {
         printk(KERN_ERR "lkmasg2 Writer - Error, couldn't copy from user space\n");
         mutex_unlock(&buffer_mutex);
         return -EFAULT;
