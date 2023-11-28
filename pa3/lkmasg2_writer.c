@@ -24,7 +24,7 @@ static int major_number;
 static struct class* lkmasg2Class = NULL;
 static struct device* lkmasg2Device = NULL;
 
-extern char shared_buffer[1025];
+char shared_buffer[1025];
 char shared_buffer[1025] = {0};
 //extern struct mutex buffer_mutex;
 static short shared_buffer_size = 0;
