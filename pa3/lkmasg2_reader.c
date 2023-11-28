@@ -13,7 +13,7 @@
 #include <linux/mutex.h>
 
 #define DEVICE_NAME "lkmasg2_reader"
-#define CLASS_NAME "char"
+#define CLASS_NAME "char_reader"
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("John Aedo");
@@ -109,6 +109,3 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
     printk(KERN_INFO "lkmasg2 Reader - Exiting read() function\n");
     return len;
 }
-
-module_init(init_module);
-module_exit(cleanup_module);
