@@ -21,8 +21,8 @@ MODULE_DESCRIPTION("lkmasg2 Reader Kernel Module");
 MODULE_VERSION("0.2");
 
 static int major_number;
-static struct class* lkmasg2Class = NULL;
-static struct device* lkmasg2Device = NULL;
+static struct class* lkmasg2ReaderClass = NULL;
+static struct device* lkmasg2ReaderDevice = NULL;
 
 extern char shared_buffer[1025];
 char shared_buffer[1025] = {0};
@@ -49,19 +49,19 @@ int init_module(void) {
         return major_number;
     }
 
-    lkmasg2Class = class_create(THIS_MODULE, CLASS_NAME);
-    if (IS_ERR(lkmasg2Class)) {
+    lkmasg2ReaderClass = class_create(THIS_MODULE, CLASS_NAME);
+    if (IS_ERR(lkmasg2ReaderClass)) {
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ALERT "lkmasg2 reader Error Encountered Failed to register device class\n");
-        return PTR_ERR(lkmasg2Class);
+        return PTR_ERR(lkmasg2ReaderClass);
     }
 
-    lkmasg2Device = device_create(lkmasg2Class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
-    if (IS_ERR(lkmasg2Device)) {
-        class_destroy(lkmasg2Class);
+    lkmasg2ReaderDevice = device_create(lkmasg2ReaderClass, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
+    if (IS_ERR(lkmasg2ReaderDevice)) {
+        class_destroy(lkmasg2ReaderClass);
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ALERT "lkmasg2 reader Error Encountered - Failed to create the device\n");
-        return PTR_ERR(lkmasg2Device);
+        return PTR_ERR(lkmasg2ReaderDevice);
     }
 
     printk(KERN_INFO "lkmasg2 Reader: device class created correctly\n");
@@ -69,9 +69,9 @@ int init_module(void) {
 }
 
 void cleanup_module(void) {
-    device_destroy(lkmasg2Class, MKDEV(major_number, 0));
-    class_unregister(lkmasg2Class);
-    class_destroy(lkmasg2Class);
+    device_destroy(lkmasg2ReaderClass, MKDEV(major_number, 0));
+    class_unregister(lkmasg2ReaderClass);
+    class_destroy(lkmasg2ReaderClass);
     unregister_chrdev(major_number, DEVICE_NAME);
 }
 
