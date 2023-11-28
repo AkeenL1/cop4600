@@ -86,7 +86,7 @@ static int close(struct inode *inodep, struct file *filep) {
 
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset) {
     printk(KERN_INFO "lkmasg2 Reader - Entered read().\n");
-    printk("%s",buffer)
+    printk("%s",buffer);
     mutex_lock(&buffer_mutex);
 
     printk(KERN_INFO "lkmasg2 Reader - Acquired the lock.\n");
