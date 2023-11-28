@@ -1,9 +1,9 @@
 obj-m += lkmasg2_writer.o lkmasg2_reader.o
 
-        all:
-make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
-        gcc test.c -o test
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+    gcc test.c -o test
 
 clean:
-make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
-        rm -f test
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	rm -f test
