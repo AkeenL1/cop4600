@@ -25,7 +25,12 @@ static struct class* lkmasg2Class = NULL;
 static struct device* lkmasg2Device = NULL;
 
 extern char shared_buffer[1024];
-extern struct mutex buffer_mutex;
+char shared_buffer[1024] = {0};
+EXPORT_SYMBOL(shared_buffer);
+
+//extern struct mutex buffer_mutex;
+DEFINE_MUTEX(shared_mutex);
+EXPORT_SYMBOL(shared_mutex);
 static short shared_buffer_size = 0;
 
 static int open(struct inode *, struct file *);
