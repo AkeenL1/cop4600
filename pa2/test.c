@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
 
     int ret, fd;
     char stringToSend[BUFFER_LENGTH];
-    strncpy(stringToSend, "", sizeof(stringToSend));
     printf("Starting device test code example...\n");
     fd = open(devicepath, O_RDWR); // Open the device with read/write access
     if (fd < 0)
