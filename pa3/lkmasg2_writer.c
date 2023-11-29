@@ -21,13 +21,14 @@ MODULE_DESCRIPTION("lkmasg2 Writer Kernel Module");
 MODULE_VERSION("0.2");
 
 static int major_number;
-static struct class* lkmasg2Class = NULL;
-static struct device* lkmasg2Device = NULL;
+static struct class* lkmasg2WriterClass = NULL;
+static struct device* lkmasg2WriterDevice = NULL;
 
-char shared_buffer[1025];
 char shared_buffer[1025] = {0};
+
 //extern struct mutex buffer_mutex;
 static short shared_buffer_size = 0;
+EXPORT_SYMBOL(shared_buffer_size);
 EXPORT_SYMBOL(shared_buffer);
 DEFINE_MUTEX(buffer_mutex);
 EXPORT_SYMBOL(buffer_mutex);
@@ -52,19 +53,19 @@ int init_module(void) {
         return major_number;
     }
 
-    lkmasg2Class = class_create(THIS_MODULE, CLASS_NAME);
-    if (IS_ERR(lkmasg2Class)) {
+    lkmasg2WriterClass = class_create(THIS_MODULE, CLASS_NAME);
+    if (IS_ERR(lkmasg2WriterClass)) {
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ALERT "lkmasg2 Writer - Error encountered couldn't register device class\n");
-        return PTR_ERR(lkmasg2Class);
+        return PTR_ERR(lkmasg2WriterClass);
     }
 
-    lkmasg2Device = device_create(lkmasg2Class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
-    if (IS_ERR(lkmasg2Device)) {
-        class_destroy(lkmasg2Class);
+    lkmasg2WriterDevice = device_create(lkmasg2WriterClass, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
+    if (IS_ERR(lkmasg2WriterDevice)) {
+        class_destroy(lkmasg2WriterClass);
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ALERT "lkmasg2 Writer - Error encountered, couldn't to create the device\n");
-        return PTR_ERR(lkmasg2Device);
+        return PTR_ERR(lkmasg2WriterDevice);
     }
 
     mutex_init(&buffer_mutex);
@@ -72,9 +73,9 @@ int init_module(void) {
 }
 
 void cleanup_module(void) {
-    device_destroy(lkmasg2Class, MKDEV(major_number, 0));
-    class_unregister(lkmasg2Class);
-    class_destroy(lkmasg2Class);
+    device_destroy(lkmasg2WriterClass, MKDEV(major_number, 0));
+    class_unregister(lkmasg2WriterClass);
+    class_destroy(lkmasg2WriterClass);
     unregister_chrdev(major_number, DEVICE_NAME);
 }
 
@@ -93,18 +94,25 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
     mutex_lock(&buffer_mutex);
 
     printk(KERN_INFO "lkmasg2 Writer - Acquired the lock.\n");
-    if (len > sizeof(shared_buffer) - shared_buffer_size) {
-        printk(KERN_INFO "lkmasg2 Writer - Buffer has %ld bytes remaining, attempting to write %ld, truncating input.\n", sizeof(shared_buffer) - shared_buffer_size, len);
-        len = sizeof(shared_buffer) - shared_buffer_size;
-    }
-
-    if (copy_from_user(shared_buffer, buffer, len)) {
+    if (copy_from_user(shared_buffer, buffer, len))
+    {
         printk(KERN_ERR "lkmasg2 Writer - Error, couldn't copy from user space\n");
-        mutex_unlock(&buffer_mutex);
         return -EFAULT;
     }
 
-    shared_buffer_size += len;
+    shared_buffer_size = strlen(shared_buffer);
+
+    if (len == 1 && buffer[0] == 8)
+    {
+        printk(KERN_INFO "lkmasg2 Writer - Success, Empty String\n");
+        return 0;
+    }
+
+    if (len > sizeof(shared_buffer))
+    {
+        len = sizeof(shared_buffer);
+        shared_buffer_size = sizeof(shared_buffer);
+    }
     printk(KERN_INFO "lkmasg2 Writer - Wrote %ld bytes to the buffer.\n", len);
 
     mutex_unlock(&buffer_mutex);

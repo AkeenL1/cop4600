@@ -26,7 +26,8 @@ static struct device* lkmasg2ReaderDevice = NULL;
 
 extern char shared_buffer[1025];
 extern struct mutex buffer_mutex;
-static short shared_buffer_size = 0;
+extern short shared_buffer_size;
+static char temp_message[sizeof(shared_buffer)] = {0};
 
 static int open(struct inode *, struct file *);
 static int close(struct inode *, struct file *);
@@ -86,23 +87,39 @@ static int close(struct inode *inodep, struct file *filep) {
 
 static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset) {
     printk(KERN_INFO "lkmasg2 Reader - Entered read().\n");
-    printk("%s",buffer);
     mutex_lock(&buffer_mutex);
-
     printk(KERN_INFO "lkmasg2 Reader - Acquired the lock.\n");
+
+
     if (len > shared_buffer_size) {
         printk(KERN_INFO "lkmasg2 Reader - Buffer has %d bytes of content, requested %ld.\n", shared_buffer_size, len);
         len = shared_buffer_size;
     }
 
-    if (copy_to_user(buffer, shared_buffer, len)) {
-        printk(KERN_ERR "lkmasg2 Reader - Error Encountered, couldn't send to user space\n");
-        mutex_unlock(&buffer_mutex);
-        return -EFAULT;
+    int error_count = 0;
+    error_count = copy_to_user(buffer, shared_buffer, len);
+
+    if (error_count == 0) {
+        int i,k;
+        for (i = 0, k = len; k < shared_buffer_size; k++, i++)
+        {
+
+            temp_shared_buffer[i] = shared_buffer[k];
+        }
+
+        for (i = shared_buffer_size - len; i < shared_buffer_size; i++)
+        {
+            shared_buffer[i] = 0;
+        }
+
+        shared_buffer_size -= len;
+        strcpy(shared_buffer, temp_shared_buffer);
+        return 0;
+    } else {
+        printk(KERN_ERR "lkmasg2 Reader - Error, Failed to send %d characters.\n", error_count);
+        return -EFAULT; // Failed -- return a bad address message
     }
 
-    shared_buffer_size -= len;
-    memmove(shared_buffer, shared_buffer + len, shared_buffer_size); // Shift remaining data in buffer
     printk(KERN_INFO "lkmasg2 Reader - Read %ld bytes from the buffer.\n", len);
 
     mutex_unlock(&buffer_mutex);
