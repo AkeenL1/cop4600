@@ -114,7 +114,7 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
 
         shared_buffer_size -= len;
         strcpy(shared_buffer, temp_shared_buffer);
-        return 0;
+
     } else {
         printk(KERN_ERR "lkmasg2 Reader - Error, Failed to send %d characters.\n", error_count);
         return -EFAULT; // Failed -- return a bad address message
@@ -124,5 +124,5 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
 
     mutex_unlock(&buffer_mutex);
     printk(KERN_INFO "lkmasg2 Reader - Exiting read() function\n");
-    return len;
+    return 0;
 }
