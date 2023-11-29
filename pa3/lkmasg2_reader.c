@@ -27,7 +27,7 @@ static struct device* lkmasg2ReaderDevice = NULL;
 extern char shared_buffer[1025];
 extern struct mutex buffer_mutex;
 extern short shared_buffer_size;
-static char temp_message[sizeof(shared_buffer)] = {0};
+static char temp_shared_buffer[sizeof(shared_buffer)] = {0};
 
 static int open(struct inode *, struct file *);
 static int close(struct inode *, struct file *);
@@ -96,7 +96,7 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
         len = shared_buffer_size;
     }
 
-    int error_count = 0;
+    static int error_count = 0;
     error_count = copy_to_user(buffer, shared_buffer, len);
 
     if (error_count == 0) {
