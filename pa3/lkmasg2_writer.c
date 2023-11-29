@@ -27,7 +27,7 @@ static struct device* lkmasg2WriterDevice = NULL;
 char shared_buffer[1025] = {0};
 
 //extern struct mutex buffer_mutex;
-static short shared_buffer_size = 0;
+short shared_buffer_size = 0;
 EXPORT_SYMBOL(shared_buffer_size);
 EXPORT_SYMBOL(shared_buffer);
 DEFINE_MUTEX(buffer_mutex);
