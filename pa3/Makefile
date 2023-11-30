@@ -1,4 +1,4 @@
-obj-m += charkmod_in.o charkmod_out.o
+obj-m += charkmod-in.o charkmod-out.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

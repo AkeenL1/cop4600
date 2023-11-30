@@ -12,7 +12,7 @@
 #include <linux/uaccess.h>
 #include <linux/mutex.h>
 
-#define DEVICE_NAME "charkmod_in"
+#define DEVICE_NAME "charkmod-in"
 #define CLASS_NAME "char_writer"
 
 MODULE_LICENSE("GPL");
