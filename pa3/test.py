@@ -7,14 +7,14 @@ import time
 
 def readDevice(readBytes, loopCount):
     for x in range(loopCount):
-        device = os.open("/dev/lkmasg2_reader", os.O_RDONLY)
+        device = os.open("/dev/charkmod-out", os.O_RDONLY)
         fileContents = os.read(device, readBytes)
         os.close(device)
         print(f"read[{x}]: [{fileContents.decode("UTF-8")}]")
 
 def writeDevice(inputString, loopCount):
     for x in range(loopCount):
-        device = open("/dev/lkmasg2_writer", "w")
+        device = open("/dev/charkmod-in", "w")
         bytesWritten = device.write(inputString)
         device.close()
         print(f"write[{x}]: {bytesWritten} bytes written.")
