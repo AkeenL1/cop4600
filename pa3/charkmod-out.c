@@ -12,8 +12,8 @@
 #include <linux/uaccess.h>
 #include <linux/mutex.h>
 
-#define DEVICE_NAME "lkmasg2_reader"
-#define CLASS_NAME "char_reader"
+#define DEVICE_NAME "lkmasg2_chark_reader"
+#define CLASS_NAME "chark_reader"
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("John Aedo");
