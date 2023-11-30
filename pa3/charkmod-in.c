@@ -13,7 +13,7 @@
 #include <linux/mutex.h>
 
 #define DEVICE_NAME "charkmod-in"
-#define CLASS_NAME "chark_writer"
+#define CLASS_NAME "char_writer"
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("John Aedo");
