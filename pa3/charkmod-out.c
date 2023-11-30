@@ -12,7 +12,7 @@
 #include <linux/uaccess.h>
 #include <linux/mutex.h>
 
-#define DEVICE_NAME "lkmasg2_chark_reader"
+#define DEVICE_NAME "charkmod_out"
 #define CLASS_NAME "chark_reader"
 
 MODULE_LICENSE("GPL");
