@@ -120,6 +120,3 @@ static ssize_t write(struct file *filep, const char *buffer, size_t len, loff_t 
     printk(KERN_INFO "lkmasg2 Writer - Exiting write() function\n");
     return len;
 }
-
-module_init(init_module);
-module_exit(cleanup_module);
