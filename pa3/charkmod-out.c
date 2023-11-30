@@ -10,6 +10,7 @@
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/vmalloc.h>
 #include <linux/mutex.h>
 
 #define DEVICE_NAME "charkmod_out"
@@ -126,3 +127,5 @@ static ssize_t read(struct file *filep, char *buffer, size_t len, loff_t *offset
     printk(KERN_INFO "lkmasg2 Reader - Exiting read() function\n");
     return 0;
 }
+module_init(init_module);
+module_exit(cleanup_module);
